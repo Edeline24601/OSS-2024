@@ -10,9 +10,9 @@ class TODOForm(FlaskForm):
     content = TextAreaField
     done = BooleanField
 
-class UserCreateForm(FlaskForm):
+class UserSignUpForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired(), Length(min=4, max=25)])
-    password = PasswordField("Password", validators=[DataRequired, EqualTo('password_check', 'Password does not match')])
+    password = PasswordField("Password", validators=[DataRequired(), EqualTo('password_check', 'Password does not match')])
     password_check = PasswordField("Confirm Password", validators=[DataRequired()])
 
 class UserLoginForm(FlaskForm):
