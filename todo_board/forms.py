@@ -6,9 +6,9 @@ from wtforms.validators import DataRequired, Length, EqualTo
 
 
 class TODOForm(FlaskForm):
-    priority = IntegerField
-    content = TextAreaField
-    done = BooleanField
+    priority = IntegerField()
+    content = TextAreaField(validators=[DataRequired()])
+    done = BooleanField(validators=[DataRequired()])
 
 class UserSignUpForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired(), Length(min=4, max=25)])

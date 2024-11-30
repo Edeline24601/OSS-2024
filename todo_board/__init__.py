@@ -17,8 +17,9 @@ def create_app():
 
     from . import db_models
 
-    @app.route('/')
-    def hello():
-        return "hello"
+    from todo_board.views import main_view, todo_view, auth_view
+    app.register_blueprint(main_view.bp)
+    app.register_blueprint(todo_view.bp)
+    app.register_blueprint(auth_view.bp)
 
     return app
