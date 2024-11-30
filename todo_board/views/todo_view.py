@@ -3,7 +3,7 @@ from werkzeug.utils import redirect
 
 from todo_board import db
 from todo_board.forms import TODOForm
-from todo_board.db_models import TODO, User
+from todo_board.db_models import TODO
 
 bp = Blueprint('todo', __name__, url_prefix='/todo')
 

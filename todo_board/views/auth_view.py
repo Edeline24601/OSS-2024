@@ -12,18 +12,15 @@ bp = Blueprint('auth', __name__, url_prefix="/auth")
 @bp.route('/login/', methods=['GET', 'POST'])
 def login():
     form = UserLoginForm()
-    if (request.method == 'Post') and (form.validate_on_submit()):
-        # TODO : complete qeury/check method
+    if (request.method == 'POST') and (form.validate_on_submit()):
         error = False
         user = User.query.filter_by(username=form.username.data).first()
         if not user:
             error = True
-            flash("no such user")
-            return redirect(url_for('main.index')) # clear login screen
-        elif not check_password_hash(user.password, form.password):
+            flash("no such user") # clear login screen
+        elif not check_password_hash(user.password, form.password.data):
             error = True
-            flash("Password does not match")
-            return redirect(url_for('main.index')) # clear login screen
+            flash("Password does not match") # clear login screen
 
         if not error:
             session["user_id"] = user.id
@@ -47,8 +44,9 @@ def signup():
             db.session.add(user)
             db.session.commit()
             return redirect(url_for('auth.login'))
+        elif form.password.data != form.password_check.data:
+            flash("Password Does not match.")
         else:
             flash("Account Already Taken")
-            return redirect(url_for('auth.signup'))
 
     return render_template('auth/signup.html', form = form)

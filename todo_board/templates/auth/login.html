@@ -8,6 +8,8 @@
 <body>
     <h1>Login</h1>
     <form method="post">
+        {{ form.csrf_token }}
+     {% include "errors.html" %}
      <div class="form-group">
             <label for="username">ID</label>
             <input type="text" class="form-control" name="username" id="username"
