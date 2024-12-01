@@ -1,100 +1,69 @@
-<!--outline created by chatgpt, edited by me-->
+<!--skeleton code created by chatgpt, edtied my edelin24601-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TODO List</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        form {
-            margin-bottom: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f4f4f4;
-        }
-        .done {
-            text-decoration: line-through;
-            color: gray;
-        }
-        .actions {
-            display: flex;
-            gap: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>TODO List</h1>
+    <div class="container mt-5">
+        <h1 class="mb-4">TODO List</h1>
 
-    <!-- 새 TODO 추가 폼 -->
-    <form method="POST">
-        {{ form.hidden_tag() }}
-        <div>
-            {{ form.date.label }}: {{ form.date(size=20) }}
-        </div>
-        <div>
-            {{ form.priority.label }}: {{ form.priority(size=5) }}
-        </div>
-        <div>
-            {{ form.content.label }}: {{ form.content(size=40) }}
-        </div>
-        <div>
-            {{ form.done.label }}: {{ form.done() }}
-        </div>
-        <div>
-            {{ form.submit() }}
-        </div>
-    </form>
+        <!-- TODO List -->
+        <form action="{{ url_for('todo.list') }}" method="GET">
+            {{ form.csrf_token }}
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Done</th>
+                        <th>Priority</th>
+                        <th>Content</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for todo in todo_list %}
+                    <tr>
+                        <td>
+                            <form action="{{ url_for('todo.update', todo_id=todo.id) }}" method="POST">
+                                <input type="checkbox" class="form-check-input"
+                                       {% if todo.done %}checked{% endif %}
+                                       onchange="this.form.submit()">
+                            </form>
+                        </td>
+                        <td>{{ todo.priority }}</td>
+                        <td>{{ todo.content }}</td>
+                        <td>{{ todo.date }}</td>
+                        <td>
+                            <form action="{{ url_for('todo.delete', todo_id=todo.id) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </form>
 
-    <!-- TODO 리스트 -->
-    <table>
-        <thead>
-            <tr>
-<!--                <th>ID</th>-->
-                <th>Date</th>
-                <th>Priority</th>
-                <th>Content</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% if todo_list %}
-            {% for todo in todo_list %}
-            <tr>
-<!--                <td>{{ todo.id }}</td>-->
-                <td>{{ todo.date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-                <td>{{ todo.priority }}</td>
-                <td class="{{ 'done' if todo.done else '' }}">{{ todo.content }}</td>
-                <td>
-                    <!-- `done` 상태 업데이트 체크박스 -->
-                    <form method="POST" style="display:inline;">
-                        <input type="hidden" name="update_id" value="{{ todo.id }}">
-                        <input type="checkbox" onchange="this.form.submit()" {{ 'checked' if todo.done else '' }}>
-                    </form>
-                </td>
-                <td class="actions">
-                    <!-- 삭제 버튼 -->
-                    <form method="POST" style="display:inline;">
-                        <input type="hidden" name="delete_id" value="{{ todo.id }}">
-                        <button type="submit">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        <!-- Add TODO Form -->
+        <form action="{{ url_for('todo.create') }}" method="POST" class="mt-4">
+            {{ form.csrf_token }}
+            <div class="mb-3">
+                <label for="content" class="form-label">TODO Content</label>
+                <input type="text" id="content" name="content" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="priority" class="form-label">Priority</label>
+                <select id="priority" name="priority" class="form-select" required>
+                    <option value="1">High</option>
+                    <option value="2">Medium</option>
+                    <option value="3">Low</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Add TODO</button>
+        </form>
+    </div>
 </body>
 </html>
