@@ -18,18 +18,14 @@ def list():
 @bp.route('/create/', methods=['POST'])
 def create():
     form = TODOForm()
-    if form.validate_on_submit():
-        new_todo = TODO(
-            date = datetime.datetime().now().strftime('%Y-%m-%d %H:%M:%S'),
-            content = form.content.data,
-            priority = form.priority.data,
-            done = False
-        )
+    new_todo = TODO(
+        date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        content = form.content.data,
+        priority = form.priority.data,
+        done = False        )
 
-        db.session.add(new_todo)
-        db.session.commit()
-    else:
-        flash("cannot add TODO, failed form validation")
+    db.session.add(new_todo)
+    db.session.commit()
     return redirect(url_for('todo.list'))
 
 @bp.route('/update/<int:todo_id>/', methods=['POST'])
