@@ -20,7 +20,7 @@ def create():
     form = TODOForm()
     if form.validate_on_submit():
         new_todo = TODO(
-            date = datetime.datetime().now(),
+            date = datetime.datetime().now().strftime('%Y-%m-%d %H:%M:%S'),
             content = form.content.data,
             priority = form.priority.data,
             done = False
